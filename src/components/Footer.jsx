@@ -23,7 +23,7 @@ const Footer = () => {
             />
             <h6>Телефон</h6>
             <p className='footer_contacts_item_phone font-grotesque'>
-              +38 (099) 678 67 89
+              +380 (50) 785 79 96
             </p>
           </div>
           <div className='footer_contacts_item'>
