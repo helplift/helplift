@@ -1,0 +1,103 @@
+/* Variables */
+:root {
+  --dark-grey: #232325;
+  --medium-grey: #3A3A3E;
+  --medium-grey-hover: #999b9e;
+  --black: #1C1C1C;
+  --black-2: #151517;
+  --light-grey: #d5d5d5;
+  --contact-form-hr: #898990;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  letter-spacing: .05rem;
+}
+
+body {
+  margin: 0;
+  font-family: "Raleway", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dark-grey);
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 0.05rem;
+}
+
+/* START: prevent address bar to change size in Safari for smooth animation */
+html {
+  overflow: hidden;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  position: fixed;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+/* END prevent address bar to change size in Safari for smooth animation */
+
+/* Hide scrollbar */
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.flex {
+  display: flex;
+}
+
+.sp-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.font-grotesque {
+  font-family: "Darker Grotesque", serif;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.3px;
+  font-size: 1.1em;
+}
+
+.full-viewport-height {
+  height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  .full-viewport-height {
+    height: 100dvh;
+  }
+}
+
+/* Product card link reset */
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+}
