@@ -8,24 +8,26 @@ export default function AutoPlaySilentVideo({ video, videoRef, className, poster
 
   useEffect(() => {
     const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    setIsLoading(true);
     videoElement.load();
-    if (videoElement) {
-      const handleCanPlayThrough = () => {
-        videoElement.play();
-        videoElement.pause();
+
+    const handleCanPlayThrough = () => {
+      videoElement.play();
+      videoElement.pause();
+      videoElement.removeEventListener('canplaythrough', handleCanPlayThrough);
+      setIsLoading(false);
+    };
+
+    videoElement.addEventListener('canplaythrough', handleCanPlayThrough);
+
+    return () => {
+      if (videoElement) {
         videoElement.removeEventListener('canplaythrough', handleCanPlayThrough);
-        setIsLoading(false);
-      };
-
-      videoElement.addEventListener('canplaythrough', handleCanPlayThrough);
-
-      return () => {
-        if (videoElement) {
-          videoElement.removeEventListener('canplaythrough', handleCanPlayThrough);
-        }
-      };
-    }
-  }, []);
+      }
+    };
+  }, [video]);
 
   return (
     <>
