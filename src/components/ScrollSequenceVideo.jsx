@@ -65,6 +65,7 @@ const ScrollSequenceVideo = () => {
 
   const scrollTo = (pointY) => {
     document.body.scrollTo(0, pointY);
+    document.documentElement.scrollTo(0, pointY);
   };
 
   function disableScroll(scrollToY) {
@@ -211,7 +212,7 @@ const ScrollSequenceVideo = () => {
   };
 
   const handleScroll = throttle(() => {
-    const scrollY = document.body.scrollTop;
+    const scrollY = document.body.scrollTop || document.documentElement.scrollTop;
 
     const flooredPrevScroll = Math.floor(prevScrollRef.current);
     if (
@@ -232,12 +233,14 @@ const ScrollSequenceVideo = () => {
     const timeoutId = setTimeout(() => {
       document.body.addEventListener('scroll', handleScroll, { passive: false });
       document.body.addEventListener('wheel', handleScroll, { passive: false });
+      document.addEventListener('scroll', handleScroll, { passive: false });
     }, 1000);
 
     return () => {
       clearTimeout(timeoutId);
       document.body.removeEventListener('scroll', handleScroll, { passive: false });
       document.body.removeEventListener('wheel', handleScroll, { passive: false });
+      document.removeEventListener('scroll', handleScroll, { passive: false });
     };
   }, [scrollPoints]);
 
