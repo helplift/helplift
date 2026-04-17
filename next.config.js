@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export', // uncomment for static export build
+  output: 'export',
   images: {
     unoptimized: true,
   },
