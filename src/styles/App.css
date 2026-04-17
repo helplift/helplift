@@ -1444,12 +1444,12 @@ add 'btn-circle-parent' or 'btn-circle-sibling' classNames */
 }
 
 .corner-btns_btn--telegram {
-  background: url(../assets/images/telegram.svg) no-repeat center center;
+  background: url(/images/telegram.svg) no-repeat center center;
   background-size: 25px;
 }
 
 .corner-btns_btn--viber {
-  background: url(../assets/images/viber.svg) no-repeat center center;
+  background: url(/images/viber.svg) no-repeat center center;
   background-size: 20px;
 }
 
@@ -1491,7 +1491,7 @@ add 'btn-circle-parent' or 'btn-circle-sibling' classNames */
 
 .progress-wrap::after {
   position: absolute;
-  background: url(../assets/images/original-arrow-up.svg) no-repeat center center;
+  background: url(/images/original-arrow-up.svg) no-repeat center center;
   background-size: contain;
   font-family: 'Font Awesome 5 Free';
   content: ' ';

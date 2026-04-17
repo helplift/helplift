@@ -1,127 +1,111 @@
-import React, { useState} from 'react';
-import { useLocation } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { contactFormVisibleState, headerThemeState, animationDisabledState } from '../recoil/atoms';
-import ButtonCircle from '../components/ButtonCircle';
-import logoWhite from '../assets/images/logo-white.png';
-import logoBlack from '../assets/images/logo-black.png';
-import hamburgerIcon from '../assets/images/hamburger.svg';
-import ButtonGradient from './ButtonGradient';
-import ROUTES from '../assets/routes.json';
-import { Link } from 'react-router-dom';
+'use client';
+
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useAppContext } from '@/context/AppContext';
+import ButtonCircle from '@/components/ButtonCircle';
+import ButtonGradient from '@/components/ButtonGradient';
 
 const Header = () => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const [mobileMenuIsVisible, setMobileMenuIsVisible] = useState(false);
-  const [, setContactFormIsVisible] = useRecoilState(contactFormVisibleState);
-  const [headerTheme] = useRecoilState(headerThemeState);
-  const [animationDisabledGlobally, setAnimationDisabledGlobally] = useRecoilState(animationDisabledState);
+  const {
+    headerTheme,
+    setContactFormVisible,
+    animationDisabled,
+    setAnimationDisabled,
+  } = useAppContext();
 
   const handleClick = (elementId) => {
     if (mobileMenuIsVisible) {
       setMobileMenuIsVisible(false);
     }
-  
+
     if (elementId) {
-      if (pathname !== ROUTES.home_page) {
-        // Navigate to the homepage with a hash
-        window.location.href = `${ROUTES.home_page}#/#${elementId}`;
+      if (pathname !== '/') {
+        window.location.href = `/#${elementId}`;
       } else {
-        // Scroll to the element immediately
         const element = document.getElementById(elementId);
         if (element) {
-          /* disable animation to avoid trigerring it when using navigation or scroll to top */
-          setAnimationDisabledGlobally(true);
-          document.body.scrollTo({ top: element.offsetTop, behavior: "smooth" });
-
-          /* enable animation after scroll */
-          setTimeout(() => {
-            setAnimationDisabledGlobally(false);
-          }, 500);
+          setAnimationDisabled(true);
+          document.body.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+          setTimeout(() => setAnimationDisabled(false), 500);
         }
       }
-      
     }
-  };  
+  };
 
   return (
     <header className={`header header--${headerTheme}`}>
-      <Link
-        to={ROUTES.home_page}
-        title='На головну'
-      >
+      <Link href="/" title="На головну">
         <div className="logo-container">
           <img
-            key={headerTheme} // Key forces re-render to trigger transition
-            className='header_logo'
-            src={headerTheme === 'light' ? logoWhite : logoBlack}
-            alt='Лого'
+            key={headerTheme}
+            className="header_logo"
+            src={headerTheme === 'light' ? '/images/logo-white.png' : '/images/logo-black.png'}
+            alt="HelpLift — виробництво підйомників"
           />
         </div>
       </Link>
       <div className={`header_nav-wrap ${mobileMenuIsVisible ? 'visible' : 'hidden'}`}>
-        <div className='header_nav-blur'></div>
-        <nav className='header_nav'>
-          <button 
+        <div className="header_nav-blur"></div>
+        <nav className="header_nav" aria-label="Основна навігація">
+          <button
             onClick={() => setMobileMenuIsVisible(false)}
-            className='header_nav-close button-gradient'
+            className="header_nav-close button-gradient"
+            aria-label="Закрити меню"
           >
             <ButtonGradient>
               <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line x1="8.13065" y1="0.353553" x2="0.352479" y2="8.13173" stroke="#ffffff"></line>
-                <line y1="-0.5" x2="11" y2="-0.5" transform="matrix(0.707107 0.707107 0.707107 -0.707107 0.7771 0)" stroke="#ffffff"></line>
+                <line x1="8.13065" y1="0.353553" x2="0.352479" y2="8.13173" stroke="#ffffff" />
+                <line y1="-0.5" x2="11" y2="-0.5" transform="matrix(0.707107 0.707107 0.707107 -0.707107 0.7771 0)" stroke="#ffffff" />
               </svg>
             </ButtonGradient>
           </button>
           <button
-            className={`header_nav_link ${animationDisabledGlobally ? 'disabled' : ''}`}
+            className={`header_nav_link ${animationDisabled ? 'disabled' : ''}`}
             onClick={() => handleClick('section-about-us')}
           >
-            {'Про нас'}
-            <div className='location-dot' />
+            Про нас
+            <div className="location-dot" />
           </button>
           <button
-            className={`header_nav_link ${animationDisabledGlobally ? 'disabled' : ''}`}
+            className={`header_nav_link ${animationDisabled ? 'disabled' : ''}`}
             onClick={() => handleClick('products-lifts')}
           >
-            {'Підйомники'}
-            <div className='location-dot' />
+            Підйомники
+            <div className="location-dot" />
           </button>
           <button
-            className={`header_nav_link ${animationDisabledGlobally ? 'disabled' : ''}`}
+            className={`header_nav_link ${animationDisabled ? 'disabled' : ''}`}
             onClick={() => handleClick('products-lighting')}
           >
-            {'Освітлення'}
-            <div className='location-dot' />
+            Освітлення
+            <div className="location-dot" />
           </button>
-          <hr id="nav-input-line" className='input-line' />
+          <hr id="nav-input-line" className="input-line" />
           <button
-            className='header_contact'
+            className="header_contact"
             onClick={() => {
-              handleClick()
-              setContactFormIsVisible(true)
+              handleClick();
+              setContactFormVisible(true);
             }}
           >
-            <p className='header_contact_text btn-circle-sibling'>
+            <p className="header_contact_text btn-circle-sibling">
               {"Зв'язатися"}
             </p>
-            <ButtonCircle
-              backgroundColor='#ffffff'
-              arrowColor='#151517'
-            />
+            <ButtonCircle backgroundColor="#ffffff" arrowColor="#151517" />
           </button>
         </nav>
       </div>
-      <button 
+      <button
         onClick={() => setMobileMenuIsVisible(true)}
-        className='header_nav-toggle button-gradient'
+        className="header_nav-toggle button-gradient"
+        aria-label="Відкрити меню"
       >
         <ButtonGradient>
-          <img
-            className='header_nav-toggle_icon'
-            src={hamburgerIcon}
-            alt='menu-icon'
-          />
+          <img className="header_nav-toggle_icon" src="/images/hamburger.svg" alt="" />
         </ButtonGradient>
       </button>
     </header>

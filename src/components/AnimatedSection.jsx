@@ -1,9 +1,8 @@
-import React from 'react';
-import ScrollSequenceVideo from './ScrollSequenceVideo';
+import ScrollSequenceVideo from '@/components/ScrollSequenceVideo';
 
 const AnimatedSection = () => {
   return (
-    <section className='section-animated'>
+    <section className="section-animated" aria-label="Анімація роботи підйомника">
       <ScrollSequenceVideo />
     </section>
   );

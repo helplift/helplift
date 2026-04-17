@@ -1,52 +1,37 @@
-import ButtonCircle from "./ButtonCircle";
-// import { hideAllVisibleText } from "../helpers/animationText";
-import { useRecoilState } from 'recoil';
-import { animationDisabledState } from '../recoil/atoms';
+'use client';
+
+import { useAppContext } from '@/context/AppContext';
+import ButtonCircle from '@/components/ButtonCircle';
 
 const SkipAnimation = () => {
-  const [animationDisabledGlobally, setAnimationDisabledGlobally] = useRecoilState(animationDisabledState);
-  
+  const { animationDisabled, setAnimationDisabled } = useAppContext();
 
-  const skipAnimation = (elementId) => { /* move to about us (up) / products (down) section */
+  const skipAnimation = (elementId) => {
     const element = document.getElementById(elementId);
     if (element) {
-      /* disable animation to avoid trigerring it when using navigation or scroll to top */
-      setAnimationDisabledGlobally(true);
-
-      document.body.scrollTo({ top: element.offsetTop, behavior: "smooth" });
-
-      /* enable animation after scroll */
-      setTimeout(() => {
-        setAnimationDisabledGlobally(false);
-      }, 500);
+      setAnimationDisabled(true);
+      document.body.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+      setTimeout(() => setAnimationDisabled(false), 500);
     }
-
-    //hideAllVisibleText();
-  }
+  };
 
   return (
     <div className="skip-animation_btns-wrapper">
       <div className="skip-animation_btns">
         <button
-          className={`skip-animation_btns_btn btn-up ${animationDisabledGlobally ? 'disabled' : ''}`}
+          className={`skip-animation_btns_btn btn-up ${animationDisabled ? 'disabled' : ''}`}
           onClick={() => skipAnimation('section-about-us')}
+          aria-label="Пропустити анімацію вгору"
         >
-          <ButtonCircle
-            backgroundColor="#9f9f9fad"
-            arrowColor="#151517"
-          />
+          <ButtonCircle backgroundColor="#9f9f9fad" arrowColor="#151517" />
         </button>
-        <p className="skip-animation_btns_text">
-          {'Пропустити анімацію'}
-        </p>
+        <p className="skip-animation_btns_text">Пропустити анімацію</p>
         <button
-          className={`skip-animation_btns_btn btn-down ${animationDisabledGlobally ? 'disabled' : ''}`}
+          className={`skip-animation_btns_btn btn-down ${animationDisabled ? 'disabled' : ''}`}
           onClick={() => skipAnimation('products-lifts')}
+          aria-label="Пропустити анімацію вниз"
         >
-          <ButtonCircle
-            backgroundColor="#9f9f9fad"
-            arrowColor="#151517"
-          />
+          <ButtonCircle backgroundColor="#9f9f9fad" arrowColor="#151517" />
         </button>
       </div>
     </div>

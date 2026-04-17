@@ -1,60 +1,67 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import { useState, useEffect, memo } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import imgDesktop from '../assets/images/scene.png';
-import imgTabletHorizontal from '../assets/images/scene-tablet-horizontal.png';
-import imgTabletVertical from '../assets/images/scene-tablet-vertical.png';
-import imgMobHorizontal from '../assets/images/scene-mob-horizontal.png';
-import imgMobVertical from '../assets/images/scene-mob-vertical.png';
-import Loader from './Loader';
+import Loader from '@/components/Loader';
 
 const ImageTextSection = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [fallbackImage, setFallbackImage] = useState(imgDesktop);
+  const [fallbackImage, setFallbackImage] = useState('/images/scene.png');
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Media queries for responsive logic
-  const isTabletHorizontal = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1024px) and (orientation: landscape)' });
-  const isTabletVertical = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1024px) and (orientation: portrait)' });
-  const isMobHorizontal = useMediaQuery({ query: '(max-width: 767px) and (orientation: landscape)' });
-  const isMobVertical = useMediaQuery({ query: '(max-width: 767px) and (orientation: portrait)' });
+  const isTabletHorizontal = useMediaQuery({
+    query: '(min-width: 768px) and (max-width: 1024px) and (orientation: landscape)',
+  });
+  const isTabletVertical = useMediaQuery({
+    query: '(min-width: 768px) and (max-width: 1024px) and (orientation: portrait)',
+  });
+  const isMobHorizontal = useMediaQuery({
+    query: '(max-width: 767px) and (orientation: landscape)',
+  });
+  const isMobVertical = useMediaQuery({
+    query: '(max-width: 767px) and (orientation: portrait)',
+  });
 
-  // Determine fallback image on mount or when media queries change
+  useEffect(() => setIsMounted(true), []);
+
   useEffect(() => {
+    if (!isMounted) return;
     if (isTabletHorizontal) {
-      setFallbackImage(imgTabletHorizontal);
+      setFallbackImage('/images/scene-tablet-horizontal.png');
     } else if (isTabletVertical) {
-      setFallbackImage(imgTabletVertical);
+      setFallbackImage('/images/scene-tablet-vertical.png');
     } else if (isMobHorizontal) {
-      setFallbackImage(imgMobHorizontal);
+      setFallbackImage('/images/scene-mob-horizontal.png');
     } else if (isMobVertical) {
-      setFallbackImage(imgMobVertical);
+      setFallbackImage('/images/scene-mob-vertical.png');
     } else {
-      setFallbackImage(imgDesktop);
+      setFallbackImage('/images/scene.png');
     }
-    setIsLoading(false); // Set loading to false after determining the image
-  }, [isTabletHorizontal, isTabletVertical, isMobHorizontal, isMobVertical]);
+    setIsLoading(false);
+  }, [isMounted, isTabletHorizontal, isTabletVertical, isMobHorizontal, isMobVertical]);
 
   return (
-    <div className="section-image-text">
+    <section className="section-image-text" aria-label="Головний банер">
       {isLoading ? (
         <Loader />
       ) : (
         <img
-          src={fallbackImage} // Fallback image
+          src={fallbackImage}
           className="section-image-text_bg-img"
-          alt="Background scene showing the lift"
-          loading="lazy"
+          alt="Підйомник HelpLift для людей з інвалідністю"
+          loading="eager"
         />
       )}
       <div className="section-image-text_content">
-        <p className="section-image-text_content_title">
+        <h1 className="section-image-text_content_title">
           Виробництво підйомників
-        </p>
+        </h1>
         <p className="section-image-text_content_subtitle">
-          для людей з інвалідністю <br/> та вуличного освітлення
+          для людей з інвалідністю <br /> та вуличного освітлення
         </p>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default React.memo(ImageTextSection);
+export default memo(ImageTextSection);

@@ -1,30 +1,21 @@
-import React, { useRef } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import ButtonCircle from './ButtonCircle';
-import ProductCard from './ProductCard';
-import ROUTES from '../assets/routes.json';
+'use client';
 
-import productsLifts from '../assets/products-lifts.json'; /* !! get images from public folder !! */
-import productsLighting from '../assets/products-lighting.json'; /* !! get images from public folder !! */
+import { useRef } from 'react';
+import { usePathname, useParams } from 'next/navigation';
+import ButtonCircle from '@/components/ButtonCircle';
+import ProductCard from '@/components/ProductCard';
+import productsLifts from '@/data/products-lifts.json';
+import productsLighting from '@/data/products-lighting.json';
 
-const ProductsCarousel = ({
-  /* optional, to exclude a product that is displayed on ProductPage from the carousel */
-  currentProductId,
-  productsSectionId
-}) => {
+const ProductsCarousel = ({ currentProductSlug, productsSectionId }) => {
   const carouselRef = useRef(null);
+  const pathname = usePathname();
+  const params = useParams();
 
-  /* check if its product page */
-  const { pathname } = useLocation();
-  const { id } = useParams();
-  const route = productsSectionId === 'products-lifts'
-    ? ROUTES.product_lifts_page
-    : ROUTES.product_lighting_page
-  const isProductPage = pathname === route.replace(':id', id);
-
-  const products = productsSectionId === 'products-lifts'
-    ? productsLifts
-    : productsLighting
+  const isLifts = productsSectionId === 'products-lifts';
+  const route = isLifts ? '/products/lifts/' : '/products/lighting/';
+  const isProductPage = pathname.startsWith(route) && params?.slug;
+  const products = isLifts ? productsLifts : productsLighting;
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -40,23 +31,24 @@ const ProductsCarousel = ({
 
   return (
     <div className="product-carousel-wrapper">
-      <button className="carousel-button left" onClick={scrollLeft}>
+      <button className="carousel-button left" onClick={scrollLeft} aria-label="Попередній">
         <ButtonCircle />
       </button>
       <div className="product-carousel" ref={carouselRef}>
         <div className="product-card-placeholder"> </div>
-        {products.map((product) => (
-          /* excluding a product that is displayed on ProductPage from the carousel */
-          currentProductId !== `${product.id}` &&
-            <ProductCard
-              key={product.id}
-              product={product}
-              route={route}
-              isProductPage={isProductPage}
-            />
-        ))}
+        {products.map(
+          (product) =>
+            currentProductSlug !== product.slug && (
+              <ProductCard
+                key={product.id}
+                product={product}
+                route={route}
+                isProductPage={isProductPage}
+              />
+            )
+        )}
       </div>
-      <button className="carousel-button right" onClick={scrollRight}>
+      <button className="carousel-button right" onClick={scrollRight} aria-label="Наступний">
         <ButtonCircle />
       </button>
     </div>

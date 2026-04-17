@@ -1,19 +1,11 @@
-import React from 'react';
-import ProductsCarousel from './ProductsCarousel';
+import ProductsCarousel from '@/components/ProductsCarousel';
 
-const ProductsSection = ({
-  title,
-  productsSectionId
-}) => {
+const ProductsSection = ({ title, productsSectionId }) => {
   return (
-    <div className='section-products' id={productsSectionId} >
-      <h2 className='section-products_title'>
-        {title}
-      </h2>
-      <ProductsCarousel
-        productsSectionId={productsSectionId}
-      />
-    </div>
+    <section className="section-products" id={productsSectionId} aria-label={title}>
+      <h2 className="section-products_title">{title}</h2>
+      <ProductsCarousel productsSectionId={productsSectionId} />
+    </section>
   );
 };
 

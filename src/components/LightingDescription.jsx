@@ -1,12 +1,9 @@
-import React from 'react';
-
 const LightingDescription = ({ productDescription }) => {
-
   return (
-    <div className='product-description'>
+    <div className="product-description">
       <h5>Опис</h5>
-      {productDescription.map((paragraph) => (
-        <p>{paragraph}</p>
+      {productDescription.map((paragraph, index) => (
+        <p key={index}>{paragraph}</p>
       ))}
       <p>Можливе виготовлення ліхтарних стовпів за індивідуальним замовленням:</p>
       <ul>
