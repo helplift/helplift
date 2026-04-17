@@ -99,11 +99,17 @@ const ScrollSequenceVideo = () => {
       currentControllerRef.current.abort();
       currentControllerRef.current = null;
     }
+    // Sync prevScrollRef with the actual scroll position to prevent false direction detection
+    const currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    prevScrollRef.current = currentScroll;
     document.body.addEventListener('scroll', handleScroll, { passive: false });
     setTimeout(() => {
+      // Re-sync again before unlocking, in case momentum shifted the position
+      const freshScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      prevScrollRef.current = freshScroll;
       isAnimatingRef.current = false;
       setAnimationDisabled(false);
-    }, 500);
+    }, 700);
   }
 
   const stopAnimation = (video) => {
@@ -159,7 +165,11 @@ const ScrollSequenceVideo = () => {
       scrollTo(newScrollPoint);
       prevScrollRef.current = newScrollPoint;
 
-      video.play();
+      video.play().catch(() => {
+        // If play fails on mobile, still enable scroll so user isn't stuck
+        enableScroll();
+        return;
+      });
 
       let newTextStage = textStageRef.current;
 
@@ -177,9 +187,10 @@ const ScrollSequenceVideo = () => {
       hiddenVideo.currentTime = newStopPointHiddenVideo / 1000;
       currentStageRef.current = newStage;
 
+      // Use timeout with extra buffer for mobile where playback may be slower
       setTimeout(() => {
         stopAnimation(video);
-      }, stopTimeoutTime);
+      }, stopTimeoutTime + 200);
     } else {
       if (textStageRef.current >= 0 || textStage >= 0) {
         textStageRef.current = -1;
@@ -215,19 +226,24 @@ const ScrollSequenceVideo = () => {
     const scrollY = document.body.scrollTop || document.documentElement.scrollTop;
 
     const flooredPrevScroll = Math.floor(prevScrollRef.current);
+    const scrollDelta = Math.abs(scrollY - flooredPrevScroll);
+
+    // Ignore tiny scroll movements (momentum/inertia on mobile)
     if (
-      flooredPrevScroll === scrollY ||
+      scrollDelta < 10 ||
       isAnimatingRef.current ||
       animationDisabledRef.current
     ) {
-      prevScrollRef.current = scrollY;
+      if (scrollDelta >= 10) {
+        prevScrollRef.current = scrollY;
+      }
       return;
     }
 
     const isScrollDown = flooredPrevScroll < scrollY;
     prevScrollRef.current = scrollY;
     animate(isScrollDown);
-  }, 200);
+  }, 250);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
