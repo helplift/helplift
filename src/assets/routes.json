@@ -1,6 +1,0 @@
-{
-  "home_page": "/",
-  "product_lifts_page": "/products/lifts/:id",
-  "product_lighting_page": "/products/lighting/:id",
-  "privacy_policy_page": "/privacy-policy"
-}
