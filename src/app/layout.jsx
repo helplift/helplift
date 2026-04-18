@@ -111,7 +111,7 @@ export const metadata = {
     canonical: 'https://helplift.com.ua',
   },
   verification: {
-    // google: 'your-google-verification-code',
+    google: 'MlTCBLVUotgj2A9fwVeTXPdxKN20ITV-SShp-jA-sbc',
   },
 };
 
